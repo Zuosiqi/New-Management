@@ -1,0 +1,60 @@
+# ------------------------------
+# Maven 构建产物
+# ------------------------------
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ------------------------------
+# IntelliJ IDEA 专属文件
+# ------------------------------
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+*.log
+atlassian-ide-plugin.xml
+com_crashub_telnet_port
+.DS_Store
+
+# ------------------------------
+# VS Code 专属文件
+# ------------------------------
+.vscode/
+*.code-workspace
+
+# ------------------------------
+# Spring Boot 专属
+# ------------------------------
+# 本地配置文件
+application-local.yml
+application-dev.yml
+application-local.properties
+application-dev.properties
+
+# 日志文件
+*.log
+spring-boot-*.log
+
+# ------------------------------
+# 系统临时文件
+# ------------------------------
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders/
+.factorypath
