@@ -1,0 +1,18 @@
+# 本地开发配置模板
+# 使用方法：
+# 1. 复制此文件到各服务的 src/main/resources/ 目录下，重命名为 application-local.yml
+# 2. 修改 password 为你本地 MySQL 的密码
+# 3. 启动服务时添加参数 --spring.profiles.active=local
+
+# employee-service 的 application-local.yml
+spring:
+  datasource:
+    username: root
+    password: 你的MySQL密码  # 修改为你的密码
+
+---
+# attendance-service 的 application-local.yml 内容相同
+spring:
+  datasource:
+    username: root
+    password: 你的MySQL密码  # 修改为你的密码
