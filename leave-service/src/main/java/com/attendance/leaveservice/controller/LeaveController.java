@@ -30,7 +30,7 @@ public class LeaveController {
      * Feign 调用演示：获取员工信息
      */
     @GetMapping("/employee-info/{employeeId}")
-    public Map getEmployeeInfo(@PathVariable Long employeeId) {
+    public Map<String, Object> getEmployeeInfo(@PathVariable Long employeeId) {
         return employeeFeignClient.getEmployeeById(employeeId);
     }
 
