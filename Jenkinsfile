@@ -43,27 +43,24 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 echo '==== 3. 开始构建 Docker 镜像 ===='
-                // 构建各个微服务的镜像
+                // 使用 nerdctl 替代 docker 进行构建，并指定命名空间为 k8s.io
+                // 这样构建的镜像会直接存在于 containerd 中，K8s 可以直接拉取到
                 sh """
-                    docker build -t ${IMAGE_PREFIX}/eureka-server:${IMAGE_TAG} -f eureka-server/Dockerfile ./eureka-server
-                    docker build -t ${IMAGE_PREFIX}/gateway-service:${IMAGE_TAG} -f gateway-service/Dockerfile ./gateway-service
-                    docker build -t ${IMAGE_PREFIX}/employee-service:${IMAGE_TAG} -f employee-service/Dockerfile ./employee-service
-                    docker build -t ${IMAGE_PREFIX}/attendance-service:${IMAGE_TAG} -f attendance-service/Dockerfile ./attendance-service
-                    docker build -t ${IMAGE_PREFIX}/leave-service:${IMAGE_TAG} -f leave-service/Dockerfile ./leave-service
+                    sudo nerdctl -n k8s.io build -t ${IMAGE_PREFIX}/eureka-server:${IMAGE_TAG} -f eureka-server/Dockerfile ./eureka-server
+                    sudo nerdctl -n k8s.io build -t ${IMAGE_PREFIX}/gateway-service:${IMAGE_TAG} -f gateway-service/Dockerfile ./gateway-service
+                    sudo nerdctl -n k8s.io build -t ${IMAGE_PREFIX}/employee-service:${IMAGE_TAG} -f employee-service/Dockerfile ./employee-service
+                    sudo nerdctl -n k8s.io build -t ${IMAGE_PREFIX}/attendance-service:${IMAGE_TAG} -f attendance-service/Dockerfile ./attendance-service
+                    sudo nerdctl -n k8s.io build -t ${IMAGE_PREFIX}/leave-service:${IMAGE_TAG} -f leave-service/Dockerfile ./leave-service
                 """
                 
                 echo '==== 4. 镜像导出与分发 (实验环境特殊处理) ===='
-                // 在标准的 CI/CD 中，这里应该是 docker push 到 Harbor 或 Docker Hub。
-                // 但根据我们之前的架构，使用的是本地节点镜像。在 k8s-master 上构建后，需要导入到 containerd。
-                // 注意：这里假设 Jenkins 运行在具有 docker 命令权限的 k8s-master 节点上。
-                
-                // 为了演示，我们将构建的镜像打个 latest 标签，以便 k8s 直接使用 (如果 imagePullPolicy 是 IfNotPresent)
+                // 使用 nerdctl 打 latest 标签
                 sh """
-                    docker tag ${IMAGE_PREFIX}/eureka-server:${IMAGE_TAG} ${IMAGE_PREFIX}/eureka-server:latest
-                    docker tag ${IMAGE_PREFIX}/gateway-service:${IMAGE_TAG} ${IMAGE_PREFIX}/gateway-service:latest
-                    docker tag ${IMAGE_PREFIX}/employee-service:${IMAGE_TAG} ${IMAGE_PREFIX}/employee-service:latest
-                    docker tag ${IMAGE_PREFIX}/attendance-service:${IMAGE_TAG} ${IMAGE_PREFIX}/attendance-service:latest
-                    docker tag ${IMAGE_PREFIX}/leave-service:${IMAGE_TAG} ${IMAGE_PREFIX}/leave-service:latest
+                    sudo nerdctl -n k8s.io tag ${IMAGE_PREFIX}/eureka-server:${IMAGE_TAG} ${IMAGE_PREFIX}/eureka-server:latest
+                    sudo nerdctl -n k8s.io tag ${IMAGE_PREFIX}/gateway-service:${IMAGE_TAG} ${IMAGE_PREFIX}/gateway-service:latest
+                    sudo nerdctl -n k8s.io tag ${IMAGE_PREFIX}/employee-service:${IMAGE_TAG} ${IMAGE_PREFIX}/employee-service:latest
+                    sudo nerdctl -n k8s.io tag ${IMAGE_PREFIX}/attendance-service:${IMAGE_TAG} ${IMAGE_PREFIX}/attendance-service:latest
+                    sudo nerdctl -n k8s.io tag ${IMAGE_PREFIX}/leave-service:${IMAGE_TAG} ${IMAGE_PREFIX}/leave-service:latest
                 """
                 // 注意：在真实的 K8s 生产环境中，最好是将镜像推送到私有仓库（如 Harbor）。
                 // 这里我们暂且省略使用 nerdctl 导出导入各个 worker 节点的复杂操作，
