@@ -60,3 +60,4 @@ local.properties
 .factorypath.idea/
 *.iml
 target/
+image-tars/
