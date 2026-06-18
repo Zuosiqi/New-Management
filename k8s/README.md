@@ -10,7 +10,7 @@
 
 3. The manifests assume:
    - namespace: `ea-ms`
-   - MySQL Service DNS: `mysql.default`
+   - MySQL Service DNS: `mysql-service.default`
    - MySQL username/password: `root/root`
 
 4. Apply manifests in order:

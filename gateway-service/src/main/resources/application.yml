@@ -43,3 +43,9 @@ eureka:
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 15
+
+ea:
+  gateway:
+    rate-limit:
+      max-requests: ${RATE_LIMIT_MAX_REQUESTS:60}
+      window-seconds: ${RATE_LIMIT_WINDOW_SECONDS:60}

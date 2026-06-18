@@ -37,6 +37,10 @@ spec:
           env:
             - name: EUREKA_SERVER_URL
               value: http://eureka-service.ea-ms.svc.cluster.local:8761/eureka/
+            - name: RATE_LIMIT_MAX_REQUESTS
+              value: "5"
+            - name: RATE_LIMIT_WINDOW_SECONDS
+              value: "30"
             - name: JAVA_OPTS
               value: "-Xms256m -Xmx512m"
           readinessProbe:

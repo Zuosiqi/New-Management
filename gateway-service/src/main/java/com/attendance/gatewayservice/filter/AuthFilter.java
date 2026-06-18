@@ -6,13 +6,14 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /**
  * 全局鉴权过滤器
- * 统一验证请求中的 token 参数
+ * 统一验证请求中的 token 参数，并设置响应编码
  */
 @Slf4j
 @Component
@@ -38,8 +39,12 @@ public class AuthFilter implements GlobalFilter, Ordered {
         }
 
         log.info("鉴权通过，放行请求: {}", path);
-        // 继续执行过滤器链中的下一个资源
-        return chain.filter(exchange);
+        // 继续执行过滤器链，并在响应时设置编码头
+        return chain.filter(exchange).then(Mono.fromRunnable(() -> {
+            ServerHttpResponse response = exchange.getResponse();
+            // 强制设置响应编码为 UTF-8
+            response.getHeaders().set("Content-Type", "application/json; charset=UTF-8");
+        }));
     }
 
     @Override
